@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <style>
+            .flex-row {
+                display: flex
+            }
+            .flex-col {
+                display: flex;
+                flex-direction: column;
+            }
+            .center-a {
+                justify-content: center
+            }
+            .center-b {
+                align-items: center
+            }
+        </style>
+    </head>
+    <body>
+        <div id="__ext-popup__">
+            <h1> IdiomGym </h1>
+            
+            <div class="flex-row center-b">
+                <label> Ativar extensão </label>
+                <input id="active-ext" type="checkbox" />
+            </div>
+        </div>
+        
+        <script>
+            !(function() {
+                var popup = document.getElementById("__ext-popup__")
+            })()
+        </script>
+    </body>
+</html>
