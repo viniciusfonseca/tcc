@@ -53,10 +53,8 @@
     function translate(text, originNode) {
 
         var context = ""
-        if (textNodes.indexOf(originNode) !== -1) {
+        if (textNodes.indexOf(originNode) === -1) {
 
-        }
-        else {
             textNodes.push(originNode)
         }
 
@@ -79,7 +77,7 @@
                 "http://localhost:8080/translate" +
                     "?t=" + text +
                     "&uid=" + user_id +
-                    "&ctx=" + context,
+                    "&ctx=" + "",
                 { headers: headers })
                 .then(parseAsJson)
                 .then(translationReceived)
@@ -90,6 +88,8 @@
     function onMouseUp(event) {
         setTimeout(function() {
             const selection = getSelection()
+
+            console.log(selection)
 
             var phrase = selection.toString()
 
