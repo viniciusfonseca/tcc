@@ -118,7 +118,7 @@
         user_id = item.user_id
         if (!user_id) {
             var uid = +(new Date())
-            chrome.storage.sync.set({ uid: uid }, function() {
+            extensions.storage.sync.set({ uid: uid }, function() {
                 user_id = uid
             })
         }
