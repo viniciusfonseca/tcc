@@ -4,6 +4,7 @@
     var user_id = null
     var extensions = typeof browser !== "undefined" ? browser : chrome
     var textNodes = []
+    var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
 
     addStyles(popover, {
         position: 'absolute',
@@ -74,7 +75,7 @@
         return new Promise(function(resolve) {
             var headers = { "Content-Type": "application/json" }
             fetch(
-                "http://localhost:8080/translate" +
+                API_URL + "/translate" +
                     "?t=" + text +
                     "&uid=" + user_id +
                     "&ctx=" + "",
