@@ -4,7 +4,8 @@
     var user_id = null
     var extensions = typeof browser !== "undefined" ? browser : chrome
     var textNodes = []
-    var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
+    // var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
+    var API_URL = "http://localhost:8080"
 
     addStyles(popover, {
         position: 'absolute',
@@ -55,7 +56,6 @@
 
         var context = ""
         if (textNodes.indexOf(originNode) === -1) {
-
             textNodes.push(originNode)
         }
 
@@ -88,9 +88,7 @@
 
     function onMouseUp(event) {
         setTimeout(function() {
-            const selection = getSelection()
-
-            console.log(selection)
+            var selection = getSelection()
 
             var phrase = selection.toString()
 
@@ -105,6 +103,19 @@
             translate(phrase, selection.baseNode)
 
             if (selection.baseNode !== selection.extentNode) { return }
+
+            var length = selection.baseOffset - selection.extentOffset
+
+            var contextFirstHalf = (function() {
+                var dataFirstHalf = selection.baseNode.data.trim().slice(0, selection.baseOffset)
+                var words = dataFirstHalf.match(/\w+/g).slice(-5)
+                return words
+            })()
+
+            var contextSecondHalf = (function() {
+                var dataSecondHalf = selection.baseNode.data.trim().slice(selection.extentOffset)
+                
+            })()
         })
 
         // search phrase
