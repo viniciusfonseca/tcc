@@ -114,8 +114,14 @@
 
             var contextSecondHalf = (function() {
                 var dataSecondHalf = selection.baseNode.data.trim().slice(selection.extentOffset)
-                
+                var words = dataSecondHalf.match(/\w+/g).slice(5)
             })()
+
+            var words = contextFirstHalf.concat('%word%').concat(contextSecondHalf)
+
+            if (words.length < 8) { return }
+
+            
         })
 
         // search phrase
