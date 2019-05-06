@@ -73,17 +73,13 @@
 
             <div class="content">
 
-                <div class="flex-row center-b v-pad test-notification">
-                    <span class="notification"> ! </span>
-                    <span class="flex">
-                        Você possui uma prova pronta para ser feita.
-                        <a href="javascript:void(0)"> Clique aqui </a>
-                    </span>
-                </div>
-
                 <div class="flex-row center-b v-pad">
                     <label> Ativar extensão </label>
                     <input id="active-ext" type="checkbox" />
+                </div>
+
+                <div class="flex-row center-b v-pad test-notification">
+                    
                 </div>
 
                 <div class="flex-row center-b v-pad">
@@ -119,8 +115,18 @@
                 }
 
                 function fetchTests() {
-
+                    var hasTest = false
+                    if (hasTest) {
+                        var notif_container = popup.getElementsByClassName('test-notification')[0]
+                        notif_container.innerHTML = "" +
+                            '<span class="notification"> ! </span>' +
+                            '<span class="flex">' +
+                                'Você possui uma prova pronta para ser feita.' +
+                                '<a href="javascript:void(0)"> Clique aqui </a>' +
+                            '</span>'
+                    }
                 }
+
 
                 document.addEventListener('DOMContentLoaded', fetchTests)
 

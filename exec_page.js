@@ -6,6 +6,7 @@
     var textNodes = []
     // var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
     var API_URL = "http://localhost:8080"
+    var EXERCISES_URL = "http://localhost:3000"
 
     addStyles(popover, {
         position: 'absolute',
@@ -115,6 +116,7 @@
             var contextSecondHalf = (function() {
                 var dataSecondHalf = selection.baseNode.data.trim().slice(selection.extentOffset)
                 var words = dataSecondHalf.match(/\w+/g).slice(5)
+                return words
             })()
 
             var words = contextFirstHalf.concat('%word%').concat(contextSecondHalf)
@@ -132,7 +134,7 @@
 
     console.log('IdiomGym initiated!')
 
-    extensions.storage.sync.get(['uid', 'active'], function(item) {
+    extensions.storage.sync.get(['uid', 'active', 'test_id'], function(item) {
         user_id = item.user_id
         if (!user_id) {
             var uid = +(new Date())
@@ -140,6 +142,28 @@
                 user_id = uid
             })
         }
+
+        fetch(`/${API_URL}/test`)
+            .then(r => r.json())
+            .then(response => {
+                var test_id = response.test_id
+                if (!test_id) { return }
+
+                extensions.notifications.onClicked.addListener(function() {
+                    extensions.notifications.clear("test")
+
+                    window.open(EXERCISES_URL + "?test_id=" + test_id, "_blank")
+                })
+
+                if (test_id !== item.test_id) {
+                    extensions.notifications.create("test", {
+                        title: "IdiomGym - Nova Prova",
+                        message: "Você possui uma nova prova para ser feita. Clique para fazer."
+                    })
+
+                    extensions.storage.sync.set({ test_id: test_id })
+                }
+            })
 
         window.__extactive__ = Boolean(parseInt(item.active))
     })
