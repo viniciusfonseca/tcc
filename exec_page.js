@@ -4,8 +4,8 @@
     window.idiom_gym_user_id = null
     var extensions = typeof browser !== "undefined" ? browser : chrome
     var textNodes = []
-    // var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
-    var API_URL = "http://localhost:8080"
+    // var API_URL = "http://localhost:8080"
+    var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
     var EXERCISES_URL = "http://localhost:3000"
 
     addStyles(popover, {
