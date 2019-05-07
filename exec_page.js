@@ -1,7 +1,7 @@
 !(function() {
 
     var popover = document.createElement("div")
-    var user_id = null
+    window.idiom_gym_user_id = null
     var extensions = typeof browser !== "undefined" ? browser : chrome
     var textNodes = []
     // var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
@@ -24,6 +24,14 @@
         for (var style in stylesObj)
             element.style[style] = stylesObj[style]
     }
+
+    window.__closeTranslationPopover = function() {
+        setTimeout(function() {
+            detachPopover()
+        })
+    }
+
+    console.log(window.__closeTranslationPopover)
 
     function detachPopover() {
 
@@ -53,9 +61,8 @@
         })
     }
 
-    function translate(text, originNode) {
+    function translate(text, originNode, context) {
 
-        var context = ""
         if (textNodes.indexOf(originNode) === -1) {
             textNodes.push(originNode)
         }
@@ -70,6 +77,8 @@
             popover.innerHTML = '' +
                 '<div style="padding: 18px">' +
                     '<p style="font-size: 18px; font-weight: bold">' + translated + '</p>' +
+                    '<br /> <br />' +
+                    // '<a href="javascript:window.__closeTranslationPopover()"> Fechar </a>' +
                 '</div>'
         }
 
@@ -78,8 +87,8 @@
             fetch(
                 API_URL + "/translate" +
                     "?t=" + text +
-                    "&uid=" + user_id +
-                    "&ctx=" + "",
+                    "&uid=" + window.idiom_gym_user_id +
+                    "&ctx=" + context,
                 { headers: headers })
                 .then(parseAsJson)
                 .then(translationReceived)
@@ -88,6 +97,7 @@
     }
 
     function onMouseUp(event) {
+        if (window.__IDIOM_GYM_EXERCISE__) { return }
         setTimeout(function() {
             var selection = getSelection()
 
@@ -101,29 +111,30 @@
 
             attachPopover(event.pageX, event.pageY)
 
-            translate(phrase, selection.baseNode)
-
-            if (selection.baseNode !== selection.extentNode) { return }
-
-            var length = selection.baseOffset - selection.extentOffset
+            if (selection.baseNode !== selection.extentNode)
+                return translate(phrase, selection.baseNode, "")
 
             var contextFirstHalf = (function() {
-                var dataFirstHalf = selection.baseNode.data.trim().slice(0, selection.baseOffset)
-                var words = dataFirstHalf.match(/\w+/g).slice(-5)
+                var dataFirstHalf = selection.baseNode.data.slice(0, selection.baseOffset).trim()
+                var words = (dataFirstHalf.match(/\w+/g) || []).slice(-5)
                 return words
             })()
 
             var contextSecondHalf = (function() {
-                var dataSecondHalf = selection.baseNode.data.trim().slice(selection.extentOffset)
-                var words = dataSecondHalf.match(/\w+/g).slice(5)
+                var dataSecondHalf = selection.baseNode.data.slice(selection.extentOffset).trim()
+                var words = (dataSecondHalf.match(/\w+/g) || []).slice(0, 5)
                 return words
             })()
 
-            var words = contextFirstHalf.concat('%word%').concat(contextSecondHalf)
+            var words = contextFirstHalf.concat('$word$').concat(contextSecondHalf)
 
-            if (words.length < 8) { return }
+            if (words.length < 8) {
+                return translate(phrase, selection.baseNode, "")
+            }
 
-            
+            var context = words.join(' ')
+
+            translate(phrase, selection.baseNode, context)
         })
 
         // search phrase
@@ -132,24 +143,28 @@
     document.body.addEventListener("mouseup", onMouseUp)
     document.body.addEventListener("touchend", onMouseUp)
 
-    console.log('IdiomGym initiated!')
-
     extensions.storage.sync.get(['uid', 'active', 'test_id'], function(item) {
-        user_id = item.user_id
-        if (!user_id) {
+        var local_user_id = item.uid
+        if (!local_user_id) {
             var uid = +(new Date())
             extensions.storage.sync.set({ uid: uid }, function() {
-                user_id = uid
+                window.idiom_gym_user_id = uid
+                console.log('IdiomGym initiated! userId:', window.idiom_gym_user_id)
             })
+            return
+        }
+        else {
+            window.idiom_gym_user_id = local_user_id
+            console.log('IdiomGym initiated! userId:', window.idiom_gym_user_id)
         }
 
-        fetch(`/${API_URL}/test`)
-            .then(r => r.json())
-            .then(response => {
+        fetch(`${API_URL}/test?uid=${local_user_id}`)
+            .then(function(r) { return r.json() })
+            .then(function(response) {
                 var test_id = response.test_id
                 if (!test_id) { return }
 
-                extensions.notifications.onClicked.addListener(function() {
+                extensions.notifications.onClosed.addListener(function() {
                     extensions.notifications.clear("test")
 
                     window.open(EXERCISES_URL + "?test_id=" + test_id, "_blank")

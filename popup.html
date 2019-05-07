@@ -100,38 +100,8 @@
                 </div>
 
             </div>
+
+            <script src="popup.js"></script>
         </div>
-
-        <script>
-            !(function() {
-                var popup = document.getElementById("__ext-popup__")
-
-                function sendFeedback() {
-
-                }
-
-                function rateExt() {
-
-                }
-
-                function fetchTests() {
-                    var hasTest = false
-                    if (hasTest) {
-                        var notif_container = popup.getElementsByClassName('test-notification')[0]
-                        notif_container.innerHTML = "" +
-                            '<span class="notification"> ! </span>' +
-                            '<span class="flex">' +
-                                'Você possui uma prova pronta para ser feita.' +
-                                '<a href="javascript:void(0)"> Clique aqui </a>' +
-                            '</span>'
-                    }
-                }
-
-
-                document.addEventListener('DOMContentLoaded', fetchTests)
-
-                var form = popup.querySelector('form')
-            })()
-        </script>
     </body>
 </html>
