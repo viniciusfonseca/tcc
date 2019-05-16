@@ -18,6 +18,10 @@ function fetchTest() {
     extensions.storage.sync.get(['uid', 'active', 'test_id'], function(item) {
         var local_user_id = item.uid
 
+        document.querySelector('.dict-button').addEventListener('click', function() {
+            window.open(EXERCISES_URL + "?user_id=" + local_user_id, "_blank")
+        })
+
         fetch(`${API_URL}/test?uid=${local_user_id}`)
             .then(function(r) { return r.json() })
             .then(function(response) {
