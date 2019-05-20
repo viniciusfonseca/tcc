@@ -1,5 +1,7 @@
-var EXERCISES_URL = "http://localhost:3000"
-var API_URL = "http://localhost:8080"
+// var API_URL = "http://localhost:8080"
+var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
+// var EXERCISES_URL = "http://localhost:3000"
+var EXERCISES_URL = "https://idiom-gym.surge.sh"
 
 var popup = document.getElementById("__ext-popup__")
 var extensions = typeof browser !== "undefined" ? browser : chrome
@@ -21,6 +23,8 @@ function fetchTest() {
         document.querySelector('.dict-button').addEventListener('click', function() {
             window.open(EXERCISES_URL + "?user_id=" + local_user_id, "_blank")
         })
+
+        document.querySelector('#uid').value = local_user_id
 
         fetch(`${API_URL}/test?uid=${local_user_id}`)
             .then(function(r) { return r.json() })

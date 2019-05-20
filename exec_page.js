@@ -6,7 +6,8 @@
     var textNodes = []
     // var API_URL = "http://localhost:8080"
     var API_URL = "https://viniciusfonseca-tcc-api.glitch.me"
-    var EXERCISES_URL = "http://localhost:3000"
+    // var EXERCISES_URL = "http://localhost:3000"
+    var EXERCISES_URL = "https://idiom-gym.surge.sh"
 
     addStyles(popover, {
         position: 'absolute',
@@ -82,6 +83,15 @@
                 '</div>'
         }
 
+        function notificationReceived(res) {
+            var notify = res.notify
+
+            if (notify) {
+                alert("[IdiomGym] - Você possui uma nova prova a ser feita.")
+                fetch(API_URL + "/user/" + window.idiom_gym_user_id + "/notify_test", { method: "PUT" })
+            }
+        }
+
         return new Promise(function(resolve) {
             var headers = { "Content-Type": "application/json" }
             fetch(
@@ -93,11 +103,17 @@
                 .then(parseAsJson)
                 .then(translationReceived)
                 .then(resolve)
+                .then(function() {
+                    setTimeout(function() {
+                        fetch(API_URL + "/user/" + window.idiom_gym_user_id + "/notify_test")
+                            .then(parseAsJson)
+                            .then(notificationReceived)
+                    }, 800)
+                })
         })
     }
 
     function onMouseUp(event) {
-        if (window.__IDIOM_GYM_EXERCISE__) { return }
         setTimeout(function() {
             var selection = getSelection()
 
