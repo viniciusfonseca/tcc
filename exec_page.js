@@ -87,7 +87,7 @@
             var notify = res.notify
 
             if (notify) {
-                alert("[IdiomGym] - Você possui uma nova prova a ser feita.")
+                alert("[IdiomGym] - Você possui uma nova prova a ser feita. Clique no ícone da extensão para fazer.")
                 fetch(API_URL + "/user/" + window.idiom_gym_user_id + "/notify_test", { method: "PUT" })
             }
         }

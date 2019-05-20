@@ -13,8 +13,9 @@
             "matches": ["<all_urls>"],
             "js": ["exec_page.js"],
             "html": "popup.html",
-            "exclude_matches": [
-                "https://idiom-gym.surge.sh/",
+            "exclude_globs": [
+                "https://idiom-gym.surge.sh/*",
+                "http://idiom-gym.surge.sh/*",
                 "http://localhost:3000/"
             ]
         }
